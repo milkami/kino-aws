@@ -260,4 +260,4 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 
 AWS_DEFAULT_ACL = None
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
