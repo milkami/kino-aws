@@ -30,7 +30,7 @@ SECRET_KEY = "zbv++av1qq7x@4a(n)04eizvbyxvzb&qc\=+pfc(lsd_t%^slve"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []  # type: ignore
+ALLOWED_HOSTS = ['*']  # type: ignore
 
 # INTERNAL_IPS = [
 #     # ...
