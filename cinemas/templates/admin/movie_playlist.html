@@ -1,0 +1,110 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+{% block content %}
+
+<style>
+          :root {
+            --inactiverow: rgba(255,0,0,0.25);
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+            --inactiverow: rgba(255,0,0,0.6);}
+          }
+</style>
+
+<div class="results">
+      <table id="result_list">
+            <thead>
+                  <tr>
+                        <th>Ignore movie</th>
+                        <th></th>
+                        <th>Title</th>
+                        <th>Movie id</th>
+                        <th>Imdb id</th>
+                        <th>Tmdb id</th>
+                        <th>Poster</th>
+                        <th>Photo</th>
+                        <th>Imdb rating</th>
+                        <th>Premiere date</th>
+                        <th>Premiere year</th>
+                        <th>Distributor</th>
+                        <th>Pg rating</th>
+                        <th>Duration</th>
+                        <th>Media</th>
+                        <th>Showtimes</th>
+                        <th>Services</th>
+                        <th>Genre</th>
+                        <th>Directors</th>
+                        <th>Actors</th>
+                        <th>Summary</th>
+                  </tr>
+            </thead>
+            <tbody>
+            {% for info in infos %}
+                  <tr {% if info.active == 0 %} style="background-color: var(--inactiverow);"{% endif %}>
+                        <td><a href="/admin/cinemas/cinemas/ignore_movie/{{info.movie.id}}">
+                              {% if info.movie.ignore %}
+                              IGNORED
+                              {% else %}
+                              Ignore this movie
+                              {% endif %}
+                        </a></td>
+                        <td><a href="/admin/cinemas/showtimes/?info_id={{info.id}}&cinema_id={{id}}"><img src="http://s3-eu-west-1.amazonaws.com/kinode/production/movies/posters/{{info.movie_id}}/tiny.jpg"></a></td>
+                        <td>{{info.title}}</td>
+                        <td><a href="/admin/movies/movies/{{info.movie_id}}/change/">{{info.movie_id}}</a></td>
+                        <td><a href="https://www.imdb.com/title/{{info.movie.imdb_id}}/">{{info.movie.imdb_id}}</a></td>
+                        <td><a href="https://www.themoviedb.org/movie/{{info.movie.tmdb_id}}">{{info.movie.tmdb_id}}</a></td>
+                        <td>{% if info.movie.poster_file_name%}
+                              ✓
+                              {% else %}
+                              ✕
+                              {% endif %}</td>
+                        <td>{% if info.movie.photo_file_name%}
+                              ✓
+                              {% else %}
+                              ✕
+                              {% endif %}</td>
+                        <td>{{info.movie.imdb_rating}}</td>
+                        <td>{{info.premiere_date}}</td>
+                        <td>{{info.movie.premiere_date}}</td>
+                        <td>{{info.distributor.name}}</td>
+                        <td>{{info.pg_rating}}</td>
+                        <td>{{info.duration}}</td>
+                        <td><a href="/admin/media/media/?media_connection_id={{info.id}}">
+                              {% for key, value in media.items %}
+                                    {% if key == info.id %}
+                                          {{value}}
+                                    {% endif %}
+                              {% endfor %}
+                        </a></td>
+                        <td><a href="/admin/cinemas/showtimes/?info_id={{info.id}}&cinema_id={{id}}">
+                              {% for key, value in number_of_showtimes.items %}
+                                    {% if key == info.id %}
+                                          {{value}}
+                                    {% endif %}
+                              {% endfor %}</a></td>
+                        <td><a href="/admin/services/moviesservices/?info_id={{info.id}}">{{info.movie_services.count}}</a></td>
+                        <td>{{info.movie.genre}}</td>
+                        <td>{% if info.directors%}
+                              ✓
+                              {% else %}
+                              ✕
+                              {% endif %}
+                              </td>
+                        <td>{% for key, value in actors.items %}
+                                    {% if key == info.id %}
+                                          {% if value != 0 %}
+                                          ✓
+                                          {% else %}
+                                          ✕
+                                          {% endif %}
+                                    {% endif %}
+                              {% endfor %}</td>
+                        <td>{{info.summary|slice:":200"}}</td>
+                  </tr>
+            {% endfor %}
+            </tbody>
+      </table>
+</div>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+django
+Pillow
+pymysql
+mysqlclient
+pi
+django-heroku
+gunicorn
+dj_database_url
+pyOpenSSL
+requests
+boto3
+django-storages
+lxml
+django-background-tasks

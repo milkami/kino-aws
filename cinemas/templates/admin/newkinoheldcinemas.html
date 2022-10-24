@@ -1,0 +1,37 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+{% block content %}
+MISSING KINOHELD API CINEMAS IN CMS: {{total|length}}
+<div class="results">
+      <table id="result_list">
+            <thead>
+                  <tr>
+                        <th>Kinoheld id</th>
+                        <th>Open air</th>
+                        <th>Name</th>
+                        <th>Street</th>
+                        <th>Postcode</th>
+                        <th>City</th>
+                        <th>Kranki id</th>
+                        <th>Deeplink</th>
+                        <th>Comment</th>
+                  </tr>
+            </thead>
+            <tbody>
+            {% for line in total %}
+                  <tr>
+                        <td>{{line.cinema_id}}</td>
+                        <td>{{line.open_air}}</td>
+                        <td>{{line.cinema_name}}</td>
+                        <td>{{line.street}}</td>
+                        <td>{{line.postcode}}</td>
+                        <td>{{line.city}}</td>
+                        <td>{{line.kranki_id}}</td>
+                        <td><a href={{line.deeplink}}>{{line.deeplink}}</a></td>
+                        <td>{{line.comment}}</td>
+                  </tr>
+            {% endfor %}
+            </tbody>
+      </table>
+</div>
+{% endblock %}

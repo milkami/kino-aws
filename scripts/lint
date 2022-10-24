@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+echo "::group::mypy"
+find . -name '*.py' -print0 | xargs -0 mypy --config-file ./mypy.ini || true
+echo "::endgroup::"
+
+echo "::group::autoflake"
+autoflake --check --recursive . | uniq || true
+echo "::endgroup::"
+
+echo "::group::isort"
+isort --check-only --atomic --combine-as --trailing-comma --multi-line=3 --line-width 88 --force-grid-wrap 0 . || true 
+echo "::endgroup::"
+
+echo "::group::black"
+echo "::warning::TODO fix formatting with black!"
+black --check . || true
+echo "::endgroup::"
+
+echo "::group::bandit"
+echo "::warning::TODO fix security warnings!"
+bandit -r . || true
+echo "::endgroup::"

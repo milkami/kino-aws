@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+echo "::group::tests"
+echo "::warning::add tests here"
+echo "::endgroup::"

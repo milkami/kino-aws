@@ -1,0 +1,298 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+{{block.super}}
+<!--Chart js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block extrahead %}
+{{block.super}}
+
+
+<style>
+    canvas{
+
+max-width:max(50vh,50vw) !important;
+max-height:max(50vh,50vw) !important;
+
+}
+#activeCinemasChart{
+
+width:450px !important;
+height:500px !important;
+
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Number of showtimes collected in past week</h1>
+<br>
+<br>
+<canvas id="myChart" width="400" height="400"></canvas>
+<br>
+<br>
+<h1>Number of Netflix and Amazon series/movies collected in past week</h1>
+<br>
+<br>
+<canvas id="seriesChart" width="400" height="400"></canvas>
+<br>
+<br>
+<h1>Number of active users in last four quarters</h1>
+<br>
+<br>
+<canvas id="quarterChart" width="400" height="400"></canvas>
+<br>
+<br>
+<h1>Number of active cinemas today</h1>
+<br>
+<br>
+<canvas id="activeCinemasChart" width="400" height="400"></canvas>
+<br>
+<br>
+<h1>Number of Errors, Alers and Warnings in the past week</h1>
+<br>
+<br>
+<canvas id="ErrorsChart" width="400" height="400"></canvas>
+
+
+<script>
+    $(document).ready(function(){
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for day in date_list %}'{{day}}', {% endfor %}],
+                datasets: [{
+                    label: 'Showtimes',
+                    data: [{% for day, count in count_showtimes_query.items %}{{count}}, {% endfor %}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgb(255, 255 ,255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgb(255, 255 ,255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+                        fontSize: 14, 
+
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                    
+                        fontSize: 14, 
+
+                    }
+                }]
+            }
+        }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        const ctx = document.getElementById('seriesChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for day in date_list %}'{{day}}', {% endfor %}],
+                datasets: [{
+                    label: 'Netflix',
+                    data: [{% for date, count in netflix_shows_count.items %}{{count}}, {% endfor %},
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1,
+                    fill: false,
+                },
+                    {label: 'Amazon',
+                    data: [{% for date, count in amazon_shows_count.items %}{{count}}, {% endfor %},
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)',
+                    ],
+                    borderWidth: 1,
+                    fill: false,
+                },
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+        
+        });
+    });
+ </script>
+<script>
+$(document).ready(function(){
+    const ctx = document.getElementById('quarterChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for key,value in final_quarters.items %}'{{value.0.date}}-{{value.1.date}}', {% endfor %}],
+            datasets: [{
+                label: "Quarters",
+                data: [{% for key, count in count_query.items %}{{count}}, {% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }
+        ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+    });
+});
+</script>
+
+<script>
+    $(document).ready(function(){
+        const ctx = document.getElementById('activeCinemasChart').getContext('2d');
+        let delayed;
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['{{today}}'],
+                datasets: [{
+                    label: 'Cinemas',
+                    data: [{{active_cinemas}}],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                animation: {
+                    onComplete: () => {
+                        delayed = true;
+                    },
+                    delay: (context) => {
+                        let delay = 0;
+                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                        delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                        }
+                        return delay;
+                    },
+                    },
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+                        fontSize: 14,
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                    }
+                }
+                ]
+            }
+        }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        const ctx = document.getElementById('ErrorsChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Error','Alert','Warning'],
+                datasets: [{
+                    label: 'Showtimes',
+                    data: [{% for key, count in num_erros_alerts_warnings.items %}{{count}}, {% endfor %}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+        });
+    });
+</script>
+
+{% endblock %}

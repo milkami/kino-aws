@@ -1,0 +1,11 @@
+version: 1.0
+runtime: python3
+build:
+  commands:
+    build:
+      - pip install -r requirements.txt
+      - python manage.py collectstatic --noinput
+run:
+  command: gunicorn cms.wsgi
+  network:
+    port: 8000
