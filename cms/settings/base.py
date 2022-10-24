@@ -112,10 +112,10 @@ WSGI_APPLICATION = "cms.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PW"),
-        "HOST": os.getenv("DB_HOST_PRODUCTION"),
+        "NAME": 'cinematic',
+        "USER": 'virtualniatelier',
+        "PASSWORD": 'Cintiq24HD',
+        "HOST": 'kinode.chlh2dhqmgv9.eu-west-1.rds.amazonaws.com',
         "PORT": "3306",
         "OPTIONS": {
             "ssl": {
