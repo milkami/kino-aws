@@ -1,7 +1,7 @@
 django
 Pillow
 pymysql
-mysqlclient
+#mysqlclient
 pi
 django-heroku
 gunicorn
